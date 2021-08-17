@@ -36,7 +36,10 @@ namespace json
 		void encode();
 
 		template <class T>
-		T get(value_type key);
+		T get(const_reference key);
+
+		template <class T>
+		void set(const_reference key, T value);
 	};
 
 
@@ -71,7 +74,7 @@ namespace json
 	}
 
 	template<class T>
-	inline T Json::get(value_type key)
+	inline T Json::get(const_reference key)
 	{
 		std::shared_ptr<GetValue<T>> visitor;
 		visitor = std::make_shared<GetValue<T>>();
@@ -80,5 +83,14 @@ namespace json
 		auto res = visitor.get()->get_value();
 		return res;
 	}
+
+	template<class T>
+	inline void Json::set(const_reference key, T value)
+	{
+
+
+
+	}
+
 
 }

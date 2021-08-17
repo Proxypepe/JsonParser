@@ -39,6 +39,8 @@ public:
 
     reference get_value() { return m_data; }
     const_reference get_value() const { return m_data; }
+
+    void set_value(value_type value) { m_data = value; }
 };
 
 class StringType : public IDataType
@@ -57,6 +59,8 @@ public:
 
     reference get_value() { return m_data; }
     const_reference get_value() const { return m_data; }
+
+    void set_value(value_type value) { m_data = value; }
 };
 
 class ArrayIntType : public IDataType
@@ -75,6 +79,8 @@ public:
 
     reference get_value() { return m_data; }
     const_reference get_value() const { return m_data; }
+
+    void set_value(value_type value) { m_data = value; }
 };
 
 class ArrayStringType : public IDataType
@@ -93,6 +99,8 @@ public:
 
     reference get_value() { return m_data; }
     const_reference get_value() const { return m_data; }
+
+    void set_value(value_type value) { m_data = value; }
 };
 
 template <class T>
