@@ -4,9 +4,11 @@
 
 class Factory
 {
+public:
 	template <class _Ty>
 	std::shared_ptr<IDataType> get_instance(_Ty);
 };
+
 
 template<>
 inline std::shared_ptr<IDataType> Factory::get_instance<int32_t>(int32_t value)

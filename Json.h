@@ -4,7 +4,7 @@
 #include <memory>
 #include "Lexer.h"
 #include "DataType.h"
-
+#include "Factory.h"
 
 namespace json
 {
@@ -27,7 +27,7 @@ namespace json
 
 	private:
 		template<class T>
-		std::pair<data_pointer, size_t> construct_json_array(std::vector<token>&, size_t);
+		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
 
 	public:
 		Json(const_reference data) : m_data(data) { }
@@ -43,33 +43,26 @@ namespace json
 	};
 
 
-	template<>
-	inline std::pair<std::shared_ptr<IDataType>, size_t> Json::construct_json_array<int32_t>(std::vector<token>& tokens, size_t start_pos)
+	template<class T>
+	inline std::pair<std::shared_ptr<IDataType>, size_t> Json::construct_json_array(const std::vector<token>& tokens,const size_t &start_pos)
 	{
-		std::vector<int32_t> json_vector;
+		std::vector<T> json_vector;
 		size_t curr_pos = start_pos;
-		int32_t element;
+		T element;
+		Factory factory;
 		for (curr_pos; tokens[curr_pos].first != TokenType::CLOSE_ARRAY; curr_pos++)
 		{
 			if (tokens[curr_pos].first != TokenType::COMMA)
 			{
-				element = stoi(tokens[curr_pos].second);
+				if (tokens[curr_pos].first == TokenType::INT)
+					element = stoi(tokens[curr_pos].second);
+				else if constexpr (std::is_same<T, std::string>::value)
+					if (tokens[curr_pos].first == TokenType::STRING)
+						element = tokens[curr_pos].second;
 				json_vector.push_back(element);
 			}
 		}
-		auto ptr = std::make_shared<ArrayIntType>(json_vector);
-		return std::make_pair(ptr, curr_pos);
-	}
-
-	template<>
-	inline std::pair<std::shared_ptr<IDataType>, size_t> Json::construct_json_array<std::string>(std::vector<token>& tokens, size_t start_pos)
-	{
-		std::vector<std::string> json_vector;
-		size_t curr_pos = start_pos;
-		for (curr_pos; tokens[curr_pos].first != TokenType::CLOSE_ARRAY; curr_pos++)
-			if (tokens[curr_pos].first != TokenType::COMMA)
-				json_vector.push_back(tokens[curr_pos].second);
-		auto ptr = std::make_shared<ArrayStringType>(json_vector);
+		auto ptr = factory.get_instance<decltype(json_vector)>(json_vector);
 		return std::make_pair(ptr, curr_pos);
 	}
 
