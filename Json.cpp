@@ -1,12 +1,5 @@
 #include "Json.h"
 
-std::pair<std::vector<IDataType>, size_t> json::Json::construct_json_array(std::vector<token>&, size_t)
-{
-
-
-
-	return std::pair<std::vector<IDataType>, size_t>();
-}
 
 void json::Json::encode()
 {
@@ -31,9 +24,19 @@ void json::Json::encode()
 			}
 			else if (tokens[i + 2].first == TokenType::OPEN_ARRAY)
 			{
-
-
-
+				i += 3;
+				std::pair < std::shared_ptr<IDataType>, size_t> vector_shift;
+				if (tokens[i].first == TokenType::INT)
+				{
+					vector_shift = construct_json_array<int32_t>(tokens, i);
+				}
+				else if ((tokens[i].first == TokenType::STRING))
+				{
+					vector_shift = construct_json_array<std::string>(tokens, i);
+				}
+				var.second = vector_shift.first;
+				i = vector_shift.second;
+				parsed_data[var.first] = var.second;
 			}
 		}
 	}

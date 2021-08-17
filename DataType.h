@@ -6,20 +6,21 @@
 class IntType;
 class StringType;
 class ArrayIntType;
-
+class ArrayStringType;
 
 class IVisitor
 {
 public:
-    virtual void visit(const IntType* element)      = 0;
-    virtual void visit(const StringType* element)   = 0;
-    virtual void visit(const ArrayIntType* element) = 0;
+    virtual void visit(const IntType* element)           = 0;
+    virtual void visit(const StringType* element)        = 0;
+    virtual void visit(const ArrayIntType* element)      = 0;
+    virtual void visit(const ArrayStringType* element)   = 0;
 };
 
 class IDataType
 {
 public:
-    virtual void accept(IVisitor* visitor) const    = 0;
+    virtual void accept(IVisitor* visitor) const         = 0;
 };
 
 class IntType : public IDataType
@@ -60,15 +61,33 @@ public:
 
 class ArrayIntType : public IDataType
 {
-    using value_type = std::vector<IntType>;
-    using reference = std::vector<IntType>&;
-    using const_reference = const std::vector<IntType>&;
+    using value_type        = std::vector<int32_t>;
+    using reference         = std::vector<int32_t>&;
+    using const_reference   = const std::vector<int32_t>&;
 
 private:
     value_type m_data;
 public:
     ArrayIntType() : m_data(value_type()) { }
     ArrayIntType(const_reference value) : m_data(value) { }
+
+    void accept(IVisitor* visitor) const override;
+
+    reference get_value() { return m_data; }
+    const_reference get_value() const { return m_data; }
+};
+
+class ArrayStringType : public IDataType
+{
+    using value_type        = std::vector<std::string>;
+    using reference         = std::vector<std::string>&;
+    using const_reference   = const std::vector<std::string>&;
+
+private:
+    value_type m_data;
+public:
+    ArrayStringType() : m_data(value_type()) { }
+    ArrayStringType(const_reference value) : m_data(value) { }
 
     void accept(IVisitor* visitor) const override;
 
@@ -95,7 +114,7 @@ public:
 
     void visit(const IntType* element) override
     {
-        if constexpr (std::is_same_v<value_type, int>)
+        if constexpr (std::is_same<value_type, int>::value)
         {
             // std::cout << "This shit int" << element->get_value();
             result = element->get_value();
@@ -105,7 +124,7 @@ public:
     void visit(const StringType* element) override
     {
         // std::cout << "This shit string" << element->get_value();
-        if constexpr (std::is_same_v<value_type, std::string>)
+        if constexpr (std::is_same<value_type, std::string>::value)
         {
             result = element->get_value();
         }
@@ -113,8 +132,12 @@ public:
 
     void visit(const ArrayIntType* element) override
     {
-        std::cout << "This shit";
+        std::cout << "This shit Int";
     }
-
+    
+    void visit(const ArrayStringType* element) override
+    {
+        std::cout << "This shit String";
+    }
 
 };

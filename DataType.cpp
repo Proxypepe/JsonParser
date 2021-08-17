@@ -14,3 +14,8 @@ void ArrayIntType::accept(IVisitor* visitor) const
 {
 	visitor->visit(this);
 }
+
+void ArrayStringType::accept(IVisitor* visitor) const
+{
+	visitor->visit(this);
+}
