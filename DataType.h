@@ -133,11 +133,18 @@ public:
     void visit(const ArrayIntType* element) override
     {
         std::cout << "This shit Int";
+        if constexpr (std::is_same<value_type, std::vector<int32_t>>::value)
+        {
+            result = element->get_value();
+        }
     }
     
     void visit(const ArrayStringType* element) override
     {
         std::cout << "This shit String";
+        if constexpr (std::is_same<value_type, std::vector<std::string>>::value)
+        {
+            result = element->get_value();
+        }
     }
-
 };

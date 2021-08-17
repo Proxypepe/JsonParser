@@ -1,0 +1,7 @@
+*.o
+JsonParser.vcxproj
+JsonParser.vcxproj.filters
+JsonParser.vcxproj.user
+main.py
+Debug/
+main

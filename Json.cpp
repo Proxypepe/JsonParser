@@ -30,7 +30,7 @@ void json::Json::encode()
 				{
 					vector_shift = construct_json_array<int32_t>(tokens, i);
 				}
-				else if ((tokens[i].first == TokenType::STRING))
+				else if (tokens[i].first == TokenType::STRING)
 				{
 					vector_shift = construct_json_array<std::string>(tokens, i);
 				}

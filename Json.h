@@ -63,14 +63,11 @@ namespace json
 	{
 		std::vector<std::string> json_vector;
 		size_t curr_pos = start_pos;
-		std::string element;
 		for (curr_pos; tokens[curr_pos].first != TokenType::CLOSE_ARRAY; curr_pos++)
 			if (tokens[curr_pos].first != TokenType::COMMA)
-				json_vector.push_back(element);
-
-		size_t shift = curr_pos - start_pos;
+				json_vector.push_back(tokens[curr_pos].second);
 		auto ptr = std::make_shared<ArrayStringType>(json_vector);
-		return std::make_pair(ptr, shift);
+		return std::make_pair(ptr, curr_pos);
 	}
 
 	template<class T>
