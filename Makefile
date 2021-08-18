@@ -1,13 +1,17 @@
 CC=g++ -std=c++17
 TARGET=main
 OBJS=main.o DataType.o Lexer.o Json.o
+GOOGLE_TEST_LIB = gtest
+GOOGLE_TEST_INCLUDE = /usr/local/include
 
+G++_FLAGS = -c -Wall -I $(GOOGLE_TEST_INCLUDE)
+LD_FLAGS = -L /usr/local/lib -l $(GOOGLE_TEST_LIB) -l pthread
 
 compile: $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET)
+	$(CC) $(OBJS) -o $(TARGET) $(LD_FLAGS)
 
 main.o: main.cpp   DataType.h Lexer.h Json.h
-	$(CC) -c main.cpp
+	$(CC) -c -Wall -I $(GOOGLE_TEST_INCLUDE) main.cpp
 
 DataType.o: DataType.cpp DataType.h 
 	$(CC) -c DataType.cpp
