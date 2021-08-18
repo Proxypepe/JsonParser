@@ -1,28 +1,53 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "DataType.h"
-#include "Lexer.h"
-#include "Json.h"
+#include "Test.h"
 
-
-
-int main()
+TEST_F(JsonTest, IntField)
 {
-	// Lexer l = Lexer("{ \"hello\":\"10\", \"gg\": \"12  \", \"g\": 12, \"ar\":[ \"12\", 13, 10]}");
-	Lexer l = Lexer("{ \"hello\":\"10\", \"gg\": 235167559, \"array\": [ 1, 2, 3], \"a\": 12,\"ss\": [\"14\", \"13\"]}");
-	// 
+	int r = j.get<int>("\"gg\"");
+	EXPECT_EQ(r, 1333);
+}
+
+TEST_F(JsonTest, StringField)
+{
+	auto r = j.get<std::string>("\"hello\"");
+	EXPECT_EQ(r, "\"10\"");
+}
+
+TEST_F(JsonTest, ArrayIntField)
+{
+	auto r2 = j.get<std::vector<int>>("\"array\"");
+	std::vector<int> ans = { 1, 2, 3 };
+	EXPECT_EQ(r2.size(), ans.size());
+	EXPECT_EQ(r2, ans);
+}
+
+TEST_F(JsonTest, ArrayStringField)
+{
+	auto r2 = j.get<std::vector<std::string>>("\"ss\"");
+	std::vector<std::string> ans = { "\"14\"", "\"13\""};
+	EXPECT_EQ(r2.size(), ans.size());
+	EXPECT_EQ(r2, ans);
+}
+
+TEST_F(JsonTest, SetValue)
+{
+	l = Lexer("{\"hello\":10, \"gg\": 12}");
 	auto encoded = l.analyze();
-	json::Json j{ encoded };
-
+	j.set_tokens(encoded);
 	j.encode();
-	auto a =  j.get<int>("\"a\"");
-	auto hello = j.get<std::string>("\"hello\"");
-	auto array_ = j.get<std::vector<int>>("\"array\"");
-	auto ss = j.get<std::vector<std::string>>("\"ss\"");
+	int r = j.get<int>("\"hello\"");
+	EXPECT_EQ(r, 10);
+	j.set<int>("\"hello\"", 12);
+	r = j.get<int>("\"hello\"");
+	EXPECT_EQ(r, 12);
+}
 
-	std::cout << a << std::endl << hello;
-
+int main(int argc, char* argv[])
+{
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 	return 0;
 }
 

@@ -10,7 +10,7 @@ LD_FLAGS = -L /usr/local/lib -l $(GOOGLE_TEST_LIB) -l pthread
 compile: $(OBJS)
 	$(CC) $(OBJS) -o $(TARGET) $(LD_FLAGS)
 
-main.o: main.cpp   DataType.h Lexer.h Json.h
+main.o: main.cpp   DataType.h Lexer.h Json.h Test.h
 	$(CC) -c -Wall -I $(GOOGLE_TEST_INCLUDE) main.cpp
 
 DataType.o: DataType.cpp DataType.h 
@@ -26,3 +26,7 @@ clean:
 .PHONY: run
 run:
 	./main
+
+.PHONY: mem
+mem:
+	valgrind ./main

@@ -33,7 +33,7 @@ private:
 
 public:
 	Lexer(const_reference data) : m_data(data) {}
-
+	Lexer() : m_data(value_type()) { }
 	std::vector<token> analyze();
 };
 
