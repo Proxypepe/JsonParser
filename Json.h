@@ -32,7 +32,9 @@ namespace json
 	public:
 		Json(const_reference data) : m_data(data) { }
 		Json(const std::vector<token>& data) : tokens(data) { }
+		Json() {}
 
+		void set_tokens(const std::vector<token>& tokens) { this->tokens = tokens; }
 		void encode();
 
 		template <class T>
@@ -80,10 +82,8 @@ namespace json
 	template<class T>
 	inline void Json::set(const_reference key, T value)
 	{
-
-
-
+		Factory factory;
+		auto ptr = factory.get_instance<T>(value);
+		parsed_data[key] = ptr;
 	}
-
-
 }
