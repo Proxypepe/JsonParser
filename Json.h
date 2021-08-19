@@ -29,6 +29,8 @@ namespace json
 		template<class T>
 		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
 
+		std::string delete_quotes(value_type);
+
 	public:
 		Json(const_reference data) : m_data(data) { }
 		Json(const std::vector<token>& data) : tokens(data) { }
@@ -60,7 +62,7 @@ namespace json
 					element = stoi(tokens[curr_pos].second);
 				else if constexpr (std::is_same<T, std::string>::value)
 					if (tokens[curr_pos].first == TokenType::STRING)
-						element = tokens[curr_pos].second;
+						element = delete_quotes(tokens[curr_pos].second);
 				json_vector.push_back(element);
 			}
 		}
