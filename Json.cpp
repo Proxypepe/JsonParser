@@ -20,7 +20,7 @@ void json::Json::encode()
 			var.first = delete_quotes(tokens[i].second);
 			if (tokens[i + 2].first == TokenType::STRING)
 			{
-				auto formated_str = delete_quotes(tokens[i + 2].second);
+				std::string formated_str = delete_quotes(tokens[i + 2].second);
 				var.second = std::make_shared<StringType>(formated_str);
 				i += 2;
 				parsed_data[var.first] = var.second;
