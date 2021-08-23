@@ -1,6 +1,15 @@
 #include "Json.h"
 
 
+std::string json::Json::delete_quotes(value_type str)
+{
+	std::string result = "";
+	if (!str.empty())
+		for (size_t i = 1; i < str.length() - 1; i++)
+			result += str[i];
+	return result;
+}
+
 void json::Json::encode()
 {
 	std::pair<value_type, data_pointer> var;
@@ -8,10 +17,11 @@ void json::Json::encode()
 	{
 		if (tokens[i].first == TokenType::STRING && tokens[i + 1].first == TokenType::COLON)
 		{
-			var.first = tokens[i].second;
+			var.first = delete_quotes(tokens[i].second);
 			if (tokens[i + 2].first == TokenType::STRING)
 			{
-				var.second = std::make_shared<StringType>(tokens[i + 2].second);
+				auto formated_str = delete_quotes(tokens[i + 2].second);
+				var.second = std::make_shared<StringType>(formated_str);
 				i += 2;
 				parsed_data[var.first] = var.second;
 			}
