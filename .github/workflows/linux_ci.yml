@@ -42,6 +42,6 @@ jobs:
           name: main
           
       - name: run tests
-        run: make run
+        run: ./main
           
           
