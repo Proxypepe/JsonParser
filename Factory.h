@@ -1,7 +1,6 @@
 #pragma once
 #include "DataType.h"
 
-
 class Factory
 {
 public:
@@ -32,6 +31,12 @@ template<>
 inline std::shared_ptr<IDataType> Factory::get_instance<std::vector<std::string>>(std::vector<std::string> value)
 {
 	return std::make_shared<ArrayStringType>(value);
+}
+
+template<>
+inline std::shared_ptr<IDataType> Factory::get_instance<bool>(bool  value)
+{
+	return std::make_shared<BoolType>(value);
 }
 
 template<class _Ty>

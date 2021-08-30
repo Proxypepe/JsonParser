@@ -4,5 +4,7 @@ JsonParser.vcxproj.filters
 JsonParser.vcxproj.user
 main.py
 Debug/
+Release/
 main
 *.txt
+*.json

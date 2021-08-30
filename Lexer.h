@@ -2,25 +2,28 @@
 #include <string>
 #include <vector>
 
+
 enum class TokenType
 {
-		INT,
-		STRING,
-		OPEN_ARRAY,
-		CLOSE_ARRAY,
-		OPEN_DICT,
-		CLOSE_DICT,
-		COLON,
-		COMMA,
-		VAR_NAME
+	INT,
+	STRING,
+	BOOL,
+	NULLPTR,
+	OPEN_ARRAY,
+	CLOSE_ARRAY,
+	OPEN_DICT,
+	CLOSE_DICT,
+	COLON,
+	COMMA,
+	VAR_NAME
 };
 
 class Lexer
 {
-	using value_type		= std::string;
-	using reference			= std::string&;
-	using const_reference	= const std::string&;
-	using token				= std::pair<TokenType, std::string>;
+	using value_type = std::string;
+	using reference = std::string&;
+	using const_reference = const std::string&;
+	using token = std::pair<TokenType, std::string>;
 
 private:
 	value_type m_data;
@@ -36,4 +39,3 @@ public:
 	Lexer() : m_data(value_type()) { }
 	std::vector<token> analyze();
 };
-

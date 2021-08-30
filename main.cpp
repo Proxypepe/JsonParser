@@ -31,6 +31,15 @@ TEST_F(JsonTest, ArrayStringField)
 	EXPECT_EQ(r2, ans);
 }
 
+TEST_F(JsonTest, BoolTypeField)
+{
+	bool r1 = j.get<bool>("boolf");
+	EXPECT_EQ(r1, false);
+
+	auto r2 = j.get<bool>("boolt");
+	EXPECT_EQ(r2, true);
+}
+
 TEST_F(JsonTest, SetValue)
 {
 	l = Lexer("{\"hello\":10, \"gg\": 12}");
@@ -43,6 +52,24 @@ TEST_F(JsonTest, SetValue)
 	r = j.get<int>("hello");
 	EXPECT_EQ(r, 12);
 }
+
+TEST_F(JsonTest, Constructor)
+{
+	std::string json_string = "{\"hello\":10, \"gg\": 12}";
+	Json json{ json_string, "str" };
+	int r = json.get<int>("hello");
+	EXPECT_EQ(r, 10);
+}
+
+TEST_F(JsonTest, FileReading)
+{
+	std::string file_name = "test.json";
+	Json json{ file_name, "file" };
+	int r = json.get<int>("hello");
+	EXPECT_EQ(r, 10);
+}
+
+
 
 int main(int argc, char* argv[])
 {
