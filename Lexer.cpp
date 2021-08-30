@@ -90,9 +90,13 @@ TokenType Lexer::recognize_token_dt(reference token)
     {
         return TokenType::STRING;
     }
-    else if (token[0] == '"' && token[token.length() - 1] == '"')
+    else if (token == "true" or token == "false")
     {
-        return TokenType::STRING;
+        return TokenType::BOOL;
+    }
+    else if (token == "null")
+    {
+        return TokenType::NULLPRT;
     }
     return TokenType::INT;
 }

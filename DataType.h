@@ -3,31 +3,35 @@
 #include <string>
 #include <vector>
 
+
 class IntType;
 class StringType;
 class ArrayIntType;
 class ArrayStringType;
+class BoolType;
+
 
 class IVisitor
 {
 public:
-    virtual void visit(const IntType* element)           = 0;
-    virtual void visit(const StringType* element)        = 0;
-    virtual void visit(const ArrayIntType* element)      = 0;
-    virtual void visit(const ArrayStringType* element)   = 0;
+    virtual void visit(const IntType* element)          = 0;
+    virtual void visit(const StringType* element)       = 0;
+    virtual void visit(const ArrayIntType* element)     = 0;
+    virtual void visit(const ArrayStringType* element)  = 0;
+    virtual void visit(const BoolType* element)         = 0;
 };
 
 class IDataType
 {
 public:
-    virtual void accept(IVisitor* visitor) const         = 0;
+    virtual void accept(IVisitor* visitor) const        = 0;
 };
 
 class IntType : public IDataType
 {
-    using value_type      = int32_t;
-    using reference       = int32_t&;
-    using const_reference = const int32_t&;
+    using value_type        = int32_t;
+    using reference         = int32_t&;
+    using const_reference   = const int32_t&;
 
 private:
     value_type m_data;
@@ -45,9 +49,9 @@ public:
 
 class StringType : public IDataType
 {
-    using value_type      = std::string;
-    using reference       = std::string&;
-    using const_reference = const std::string&;
+    using value_type        = std::string;
+    using reference         = std::string&;
+    using const_reference   = const std::string&;
 
 private:
     value_type m_data;
@@ -103,11 +107,31 @@ public:
     void set_value(value_type value) { m_data = value; }
 };
 
+class BoolType : public IDataType
+{
+    using value_type        = bool;
+    using reference         = bool&;
+    using const_reference   = const bool&;
+
+private:
+    value_type m_data;
+public:
+    BoolType() : m_data(value_type()) { }
+    BoolType(const_reference value) : m_data(value) { }
+
+    void accept(IVisitor* visitor) const override;
+
+    reference get_value() { return m_data; }
+    const_reference get_value() const { return m_data; }
+
+    void set_value(value_type value) { m_data = value; }
+};
+
 template <class T>
 class GetValue : public IVisitor
 {
-    using value_type      = T;
-    using reference       = T&;
+    using value_type = T;
+    using reference = T&;
     using const_reference = const T&;
 
 private:
@@ -116,7 +140,7 @@ private:
 
 public:
     GetValue() : result(value_type()) { }
-    
+
     value_type get_value() { return result; }
     const value_type get_value() const { return result; }
 
@@ -143,10 +167,18 @@ public:
             result = element->get_value();
         }
     }
-    
+
     void visit(const ArrayStringType* element) override
     {
         if constexpr (std::is_same<value_type, std::vector<std::string>>::value)
+        {
+            result = element->get_value();
+        }
+    }
+
+    void visit(const BoolType* element) override
+    {
+        if constexpr (std::is_same<value_type, bool>::value)
         {
             result = element->get_value();
         }

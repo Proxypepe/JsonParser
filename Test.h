@@ -19,7 +19,7 @@ public:
 protected:
 	void SetUp() override
 	{
-		l = Lexer("{ \"hello\":\"10\", \"gg\": 1333, \"array\": [ 1, 2, 3], \"a\": 12,\"ss\": [\"14\", \"13\"]}");
+		l = Lexer("{ \"hello\":\"10\", \"gg\": 1333, \"array\": [ 1, 2, 3], \"a\": 12,\"ss\": [\"14\", \"13\"], \"boolt\": true, \"boolf\": false}");
 		auto encoded = l.analyze();
 		j.set_tokens(encoded);
 		j.encode();

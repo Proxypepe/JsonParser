@@ -59,10 +59,14 @@ namespace json
 			if (tokens[curr_pos].first != TokenType::COMMA)
 			{
 				if (tokens[curr_pos].first == TokenType::INT)
+				{
 					element = stoi(tokens[curr_pos].second);
-				else if constexpr (std::is_same<T, std::string>::value)
-					if (tokens[curr_pos].first == TokenType::STRING)
+				}
+				else if (tokens[curr_pos].first == TokenType::STRING)
+				{
+					if constexpr (std::is_same<T, std::string>::value)
 						element = delete_quotes(tokens[curr_pos].second);
+				}
 				json_vector.push_back(element);
 			}
 		}

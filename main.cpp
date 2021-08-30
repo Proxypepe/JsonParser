@@ -31,6 +31,15 @@ TEST_F(JsonTest, ArrayStringField)
 	EXPECT_EQ(r2, ans);
 }
 
+TEST_F(JsonTest, BoolTypeField)
+{
+	auto r1 = j.get<bool>("boolf");
+	EXPECT_EQ(r1, false);
+
+	auto r2 = j.get<bool>("boolt");
+	EXPECT_EQ(r2, true);
+}
+
 TEST_F(JsonTest, SetValue)
 {
 	l = Lexer("{\"hello\":10, \"gg\": 12}");

@@ -32,6 +32,13 @@ void json::Json::encode()
 				i += 2;
 				parsed_data[var.first] = var.second;
 			}
+			else if (tokens[i + 2].first == TokenType::BOOL)
+			{
+				bool value = tokens[i + 2].second == "true" ? true : false;
+				var.second = std::make_shared<BoolType>(value);
+				i += 2;
+				parsed_data[var.first] = var.second;
+			}
 			else if (tokens[i + 2].first == TokenType::OPEN_ARRAY)
 			{
 				i += 3;
