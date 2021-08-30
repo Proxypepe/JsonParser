@@ -5,6 +5,7 @@
 #include "Lexer.h"
 #include "DataType.h"
 #include "Factory.h"
+#include "FileReader.h"
 
 namespace json
 {
@@ -29,14 +30,17 @@ namespace json
 		template<class T>
 		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
 
-		std::string delete_quotes(value_type);
+		std::string delete_quotes(value_type) noexcept;
 
 	public:
-		Json(const_reference data) : m_data(data) { }
-		Json(const std::vector<token>& data) : tokens(data) { }
+		explicit Json(const_reference data) : m_data(data) { }
+		explicit Json(value_type&& data) : m_data(std::move(data)) { }
+		explicit Json(const std::vector<token>& data) : tokens(data) { }
+		explicit Json(const_reference data, const_reference data_type);
 		Json() {}
 
-		void set_tokens(const std::vector<token>& tokens) { this->tokens = tokens; }
+
+		void set_tokens(const std::vector<token>& tokens) noexcept { this->tokens = tokens; }
 		void encode();
 
 		template <class T>

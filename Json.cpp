@@ -1,13 +1,30 @@
 #include "Json.h"
 
 
-std::string json::Json::delete_quotes(value_type str)
+std::string json::Json::delete_quotes(value_type str) noexcept
 {
 	std::string result = "";
+
 	if (!str.empty())
 		for (size_t i = 1; i < str.length() - 1; i++)
 			result += str[i];
+
 	return result;
+}
+
+json::Json::Json(const_reference data, const_reference data_type)
+{
+	std::string tmp_data;
+
+	if (data_type == "file")
+		tmp_data = FileReader::read_file(data);
+	
+	else if ( data_type == "str")
+		tmp_data = data;
+	
+	Lexer lexer = Lexer(tmp_data);
+	tokens = lexer.analyze();
+	encode();
 }
 
 void json::Json::encode()

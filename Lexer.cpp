@@ -96,7 +96,7 @@ TokenType Lexer::recognize_token_dt(reference token)
     }
     else if (token == "null")
     {
-        return TokenType::NULLPRT;
+        return TokenType::NULLPTR;
     }
     return TokenType::INT;
 }

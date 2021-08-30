@@ -8,7 +8,7 @@ enum class TokenType
 	INT,
 	STRING,
 	BOOL,
-	NULLPRT,
+	NULLPTR,
 	OPEN_ARRAY,
 	CLOSE_ARRAY,
 	OPEN_DICT,
