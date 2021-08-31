@@ -25,3 +25,8 @@ void BoolType::accept(IVisitor* visitor) const
 {
 	visitor->visit(this);
 }
+
+void ObjectType::accept(IVisitor* visitor) const
+{
+	visitor->visit(this);
+}

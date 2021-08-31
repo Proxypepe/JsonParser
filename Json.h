@@ -1,7 +1,9 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <map>
 #include <memory>
+#include <variant>
 #include "Lexer.h"
 #include "DataType.h"
 #include "Factory.h"
@@ -11,26 +13,36 @@ namespace json
 {
 	class Json
 	{
+	public:
 		using value_type	  = std::string;
-		using reference		  = std::string&;
-		using const_reference = const std::string&;
+		using reference		  = value_type&;
+		using const_reference = const value_type&;
 
 		using data_pointer	  = std::shared_ptr<IDataType>;
 		using const_pointer   = const std::shared_ptr<IDataType>;
 
 		using token			  = std::pair<TokenType, std::string>;
 
+		using JInt			  = int32_t;
+		using JString		  = std::string;
+		using JBool			  = bool;
+		using JIarray		  = std::vector<int32_t>;
+		using JSarray		  = std::vector<value_type>;
+		using JObject		  = std::map<value_type, data_pointer>;
+
 	private:
 		value_type			m_data;
 		std::vector<token>	tokens;
 
-		std::map<value_type, data_pointer> parsed_data;
+		JObject parsed_data;
 
 	private:
 		template<class T>
 		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
 
 		std::string delete_quotes(value_type) noexcept;
+
+		JObject create_object(size_t&);
 
 	public:
 		explicit Json(const_reference data) : m_data(data) { }
@@ -48,6 +60,8 @@ namespace json
 
 		template <class T>
 		void set(const_reference key, T value);
+
+		data_pointer get_pointer(const_reference key) { return parsed_data[key]; }
 	};
 
 
@@ -95,5 +109,26 @@ namespace json
 		Factory factory;
 		auto ptr = factory.get_instance<T>(value);
 		parsed_data[key] = ptr;
+	}
+
+	template<class T>
+	T get(Json::data_pointer data)
+	{
+		std::shared_ptr<GetValue<T>> visitor;
+		visitor = std::make_shared<GetValue<T>>();
+		data->accept(visitor.get());
+		T res = visitor.get()->get_value();
+		return res;
+	}
+	
+	template<class T>
+	T get(Json j, Json::const_reference key)
+	{
+		std::shared_ptr<GetValue<T>> visitor;
+		visitor = std::make_shared<GetValue<T>>();
+		auto var = j.get_pointer(key).get();
+		var->accept(visitor.get());
+		auto res = visitor.get()->get_value();
+		return res;
 	}
 }
