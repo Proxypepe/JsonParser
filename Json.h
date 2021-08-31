@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <variant>
 #include "Lexer.h"
 #include "DataType.h"
 #include "Factory.h"
@@ -12,17 +13,18 @@ namespace json
 {
 	class Json
 	{
+	public:
 		using value_type	  = std::string;
-		using reference		  = std::string&;
-		using const_reference = const std::string&;
+		using reference		  = value_type&;
+		using const_reference = const value_type&;
 
 		using data_pointer	  = std::shared_ptr<IDataType>;
 		using const_pointer   = const std::shared_ptr<IDataType>;
 
 		using token			  = std::pair<TokenType, std::string>;
-	public:
+
 		using JInt			  = int32_t;
-		using JSting		  = std::string;
+		using JString		  = std::string;
 		using JBool			  = bool;
 		using JIarray		  = std::vector<int32_t>;
 		using JSarray		  = std::vector<value_type>;
@@ -58,6 +60,8 @@ namespace json
 
 		template <class T>
 		void set(const_reference key, T value);
+
+		data_pointer get_pointer(const_reference key) { return parsed_data[key]; }
 	};
 
 
@@ -105,5 +109,26 @@ namespace json
 		Factory factory;
 		auto ptr = factory.get_instance<T>(value);
 		parsed_data[key] = ptr;
+	}
+
+	template<class T>
+	T get(Json::data_pointer data)
+	{
+		std::shared_ptr<GetValue<T>> visitor;
+		visitor = std::make_shared<GetValue<T>>();
+		data->accept(visitor.get());
+		T res = visitor.get()->get_value();
+		return res;
+	}
+	
+	template<class T>
+	T get(Json j, Json::const_reference key)
+	{
+		std::shared_ptr<GetValue<T>> visitor;
+		visitor = std::make_shared<GetValue<T>>();
+		auto var = j.get_pointer(key).get();
+		var->accept(visitor.get());
+		auto res = visitor.get()->get_value();
+		return res;
 	}
 }

@@ -2,22 +2,23 @@
 #include <vector>
 #include <string>
 #include "Test.h"
+#include "Json.h"
 
 TEST_F(JsonTest, IntField)
 {
-	int r = j.get<int>("gg");
+	int r = j.get<Json::JInt>("gg");
 	EXPECT_EQ(r, 1333);
 }
 
 TEST_F(JsonTest, StringField)
 {
-	auto r = j.get<std::string>("hello");
+	auto r = j.get<Json::JString>("hello");
 	EXPECT_EQ(r, "10");
 }
 
 TEST_F(JsonTest, ArrayIntField)
 {
-	auto r2 = j.get<std::vector<int>>("array");
+	auto r2 = j.get<Json::JIarray>("array");
 	std::vector<int> ans = { 1, 2, 3 };
 	EXPECT_EQ(r2.size(), ans.size());
 	EXPECT_EQ(r2, ans);
@@ -25,7 +26,7 @@ TEST_F(JsonTest, ArrayIntField)
 
 TEST_F(JsonTest, ArrayStringField)
 {
-	auto r2 = j.get<std::vector<std::string>>("ss");
+	auto r2 = j.get<Json::JSarray>("ss");
 	std::vector<std::string> ans = { "14", "13"};
 	EXPECT_EQ(r2.size(), ans.size());
 	EXPECT_EQ(r2, ans);
@@ -33,11 +34,18 @@ TEST_F(JsonTest, ArrayStringField)
 
 TEST_F(JsonTest, BoolTypeField)
 {
-	bool r1 = j.get<bool>("boolf");
+	bool r1 = j.get<Json::JBool>("boolf");
 	EXPECT_EQ(r1, false);
 
-	auto r2 = j.get<bool>("boolt");
+	auto r2 = j.get<Json::JBool>("boolt");
 	EXPECT_EQ(r2, true);
+}
+
+TEST_F(JsonTest, ObjectTypeField)
+{
+	auto r = get<json::Json::JObject>(j, "dict");
+	auto r2 = json::get<json::Json::JInt>(r["first"]);
+	EXPECT_EQ(r2, 1);
 }
 
 TEST_F(JsonTest, SetValue)

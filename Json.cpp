@@ -92,4 +92,3 @@ void json::Json::encode()
 	size_t pointer = 0;
 	parsed_data = create_object(pointer);
 }
-
