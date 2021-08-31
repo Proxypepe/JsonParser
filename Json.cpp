@@ -12,25 +12,11 @@ std::string json::Json::delete_quotes(value_type str) noexcept
 	return result;
 }
 
-json::Json::Json(const_reference data, const_reference data_type)
-{
-	std::string tmp_data;
-
-	if (data_type == "file")
-		tmp_data = FileReader::read_file(data);
-	
-	else if ( data_type == "str")
-		tmp_data = data;
-	
-	Lexer lexer = Lexer(tmp_data);
-	tokens = lexer.analyze();
-	encode();
-}
-
-void json::Json::encode()
+json::Json::JObject json::Json::create_object(size_t& i)
 {
 	std::pair<value_type, data_pointer> var;
-	for (size_t i = 0; i < tokens.size() - 2; i++)
+	JObject json_object;
+	for (; i < tokens.size() - 2; i++)
 	{
 		if (tokens[i].first == TokenType::STRING && tokens[i + 1].first == TokenType::COLON)
 		{
@@ -40,26 +26,26 @@ void json::Json::encode()
 				std::string formated_str = delete_quotes(tokens[i + 2].second);
 				var.second = std::make_shared<StringType>(formated_str);
 				i += 2;
-				parsed_data[var.first] = var.second;
+				json_object[var.first] = var.second;
 			}
 			else if (tokens[i + 2].first == TokenType::INT)
 			{
 				int32_t converted = stoi(tokens[i + 2].second);
 				var.second = std::make_shared<IntType>(converted);
 				i += 2;
-				parsed_data[var.first] = var.second;
+				json_object[var.first] = var.second;
 			}
 			else if (tokens[i + 2].first == TokenType::BOOL)
 			{
 				bool value = tokens[i + 2].second == "true" ? true : false;
 				var.second = std::make_shared<BoolType>(value);
 				i += 2;
-				parsed_data[var.first] = var.second;
+				json_object[var.first] = var.second;
 			}
 			else if (tokens[i + 2].first == TokenType::OPEN_ARRAY)
 			{
 				i += 3;
-				std::pair < std::shared_ptr<IDataType>, size_t> vector_shift;
+				std::pair < data_pointer, size_t> vector_shift;
 				if (tokens[i].first == TokenType::INT)
 				{
 					vector_shift = construct_json_array<int32_t>(tokens, i);
@@ -70,9 +56,40 @@ void json::Json::encode()
 				}
 				var.second = vector_shift.first;
 				i = vector_shift.second;
-				parsed_data[var.first] = var.second;
+				json_object[var.first] = var.second;
+			}
+			else if (tokens[i + 2].first == TokenType::OPEN_DICT)
+			{
+				i += 2;
+				json_object[var.first] = std::make_shared<ObjectType>(create_object(i));
 			}
 		}
+		else if (tokens[i].first == TokenType::CLOSE_DICT)
+		{
+			return json_object;
+		}
 	}
+	return json_object;
+}
+
+json::Json::Json(const_reference data, const_reference data_type)
+{
+	std::string tmp_data;
+
+	if (data_type == "file")
+		tmp_data = FileReader::read_file(data);
+	
+	else if (data_type == "str")
+		tmp_data = data;
+	
+	Lexer lexer = Lexer(tmp_data);
+	tokens = lexer.analyze();
+	encode();
+}
+
+void json::Json::encode()
+{
+	size_t pointer = 0;
+	parsed_data = create_object(pointer);
 }
 

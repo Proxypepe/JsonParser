@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <map>
 #include <memory>
@@ -19,18 +20,27 @@ namespace json
 		using const_pointer   = const std::shared_ptr<IDataType>;
 
 		using token			  = std::pair<TokenType, std::string>;
+	public:
+		using JInt			  = int32_t;
+		using JSting		  = std::string;
+		using JBool			  = bool;
+		using JIarray		  = std::vector<int32_t>;
+		using JSarray		  = std::vector<value_type>;
+		using JObject		  = std::map<value_type, data_pointer>;
 
 	private:
 		value_type			m_data;
 		std::vector<token>	tokens;
 
-		std::map<value_type, data_pointer> parsed_data;
+		JObject parsed_data;
 
 	private:
 		template<class T>
 		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
 
 		std::string delete_quotes(value_type) noexcept;
+
+		JObject create_object(size_t&);
 
 	public:
 		explicit Json(const_reference data) : m_data(data) { }

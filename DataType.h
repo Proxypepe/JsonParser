@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <variant>
 
 class IntType;
 class StringType;
@@ -32,8 +33,8 @@ class IntType : public IDataType
 {
 public:
     using value_type        = int32_t;
-    using reference         = int32_t&;
-    using const_reference   = const int32_t&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
@@ -53,8 +54,8 @@ class StringType : public IDataType
 {
 public:
     using value_type        = std::string;
-    using reference         = std::string&;
-    using const_reference   = const std::string&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
@@ -74,8 +75,8 @@ class ArrayIntType : public IDataType
 {
 public:
     using value_type        = std::vector<int32_t>;
-    using reference         = std::vector<int32_t>&;
-    using const_reference   = const std::vector<int32_t>&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
@@ -95,8 +96,8 @@ class ArrayStringType : public IDataType
 {
 public:
     using value_type        = std::vector<std::string>;
-    using reference         = std::vector<std::string>&;
-    using const_reference   = const std::vector<std::string>&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
@@ -116,8 +117,8 @@ class BoolType : public IDataType
 {
 public:
     using value_type        = bool;
-    using reference         = bool&;
-    using const_reference   = const bool&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
@@ -139,8 +140,8 @@ public:
     using data_pointer = std::shared_ptr<IDataType>;
 
     using value_type        = std::map<std::string, data_pointer>;
-    using reference         = std::map<std::string, data_pointer>&;
-    using const_reference   = const std::map<std::string, data_pointer>&;
+    using reference         = value_type&;
+    using const_reference   = const value_type&;
 
 private:
     value_type m_data;
