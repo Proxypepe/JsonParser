@@ -16,11 +16,17 @@ class FileReader
 {
 public:
 	using value_type		= std::string;
-	using reference			= std::string&;
-	using const_reference	= const std::string&;
+	using reference			= value_type&;
+	using const_reference	= const value_type&;
 
 	FileReader() = delete;
 
+private:
+	static value_type formate_line(const_reference);
+
+public:
+
 	static std::string read_file(const_reference);
+
 };
 
