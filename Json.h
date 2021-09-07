@@ -39,11 +39,9 @@ namespace json
 	private:
 		template<class T>
 		std::pair<data_pointer, size_t> construct_json_array(const std::vector<token>&, const size_t&);
-
 		std::string delete_quotes(value_type) noexcept;
-
 		JObject create_object(size_t&);
-
+		void serialize();
 	public:
 		explicit Json(const_reference data) : m_data(data) { }
 		explicit Json(value_type&& data) : m_data(std::move(data)) { }
@@ -53,7 +51,7 @@ namespace json
 
 
 		void set_tokens(const std::vector<token>& tokens) noexcept { this->tokens = tokens; }
-		void encode();
+		void encode() noexcept;
 
 		template <class T>
 		T get(const_reference key);
@@ -127,7 +125,7 @@ namespace json
 		std::shared_ptr<GetValue<T>> visitor;
 		visitor = std::make_shared<GetValue<T>>();
 		auto var = j.get_pointer(key).get();
-		var->accept(visitor.get());
+		j.get_pointer(key).get()->accept(visitor.get());
 		auto res = visitor.get()->get_value();
 		return res;
 	}

@@ -33,7 +33,6 @@ private:
 	std::vector<value_type> splite();
 	std::vector<token> parse(std::vector<value_type>&);
 	TokenType recognize_token_dt(reference);
-
 public:
 	Lexer(const_reference data) : m_data(data) {}
 	Lexer() : m_data(value_type()) { }

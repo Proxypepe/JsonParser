@@ -17,12 +17,12 @@ std::vector<std::string> Lexer::splite()
     {
         if (c == '"')
         {
-            tmp_string += "\"";
+            //tmp_string += "\"";
             in_quotes *= -1;
-        } 
+        }
         else if (!tmp_string.empty())
         {
-            if (c == ':' || c == ',' || c == '[' || c == ']' || c == '{' || c == '}' || c == ',')
+            if ((c == ':' || c == '[' || c == ']' || c == '{' || c == '}' || c == ',') && in_quotes == 1)
             {
                 tmp_symbol = c;
                 push_str_symbol(result, tmp_string, tmp_symbol);
@@ -36,8 +36,18 @@ std::vector<std::string> Lexer::splite()
                 result.push_back(tmp_symbol);
             }
         }
-        if ( (c != ' '  || (c == ' ' && in_quotes == -1)) && c != '"' && c != ',' && c != ':' && c != '{' && c != '}' && c != ']' && c != '[')
-            tmp_string += c;
+        if (in_quotes == -1 && c != '"')
+        {
+                tmp_string += c;
+        }
+        else
+        {
+            if ( c != ':' && c != '{' && c != '}' && c != ']' && c != '[' && c != ' ' && c != ',')
+            {
+                tmp_string += c;
+            }
+        }
+        // ((c != ' ' || (c == ' ' && in_quotes == -1)) && )
     }
     return result;
 }

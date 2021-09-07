@@ -52,6 +52,7 @@ json::Json::JObject json::Json::create_object(size_t& i)
 				}
 				else if (tokens[i].first == TokenType::STRING)
 				{
+
 					vector_shift = construct_json_array<std::string>(tokens, i);
 				}
 				var.second = vector_shift.first;
@@ -72,6 +73,13 @@ json::Json::JObject json::Json::create_object(size_t& i)
 	return json_object;
 }
 
+void json::Json::serialize()
+{
+
+
+
+}
+
 json::Json::Json(const_reference data, const_reference data_type)
 {
 	std::string tmp_data;
@@ -87,7 +95,7 @@ json::Json::Json(const_reference data, const_reference data_type)
 	encode();
 }
 
-void json::Json::encode()
+void json::Json::encode() noexcept
 {
 	size_t pointer = 0;
 	parsed_data = create_object(pointer);
